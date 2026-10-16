@@ -1,0 +1,2 @@
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\CMakeLists.txt
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\CMakeLists.txt

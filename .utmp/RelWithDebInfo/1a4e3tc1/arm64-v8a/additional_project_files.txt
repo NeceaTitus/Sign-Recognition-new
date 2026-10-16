@@ -1,0 +1,17 @@
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\GAToUnityCallbacks.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\MacroEnd.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\MacroHeaderBegin.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\MacroSourceBegin.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UGAApplication.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UGAConfiguration.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UGADebug.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UGAEvents.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UGAInput.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UGASoftKeyboard.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UGASoftKeyboardCallbacks.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UGATypes.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UGAVersion.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UnityToGACallbacks.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UnityToGAConfigurationCallbacks.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UnityToGAKeyEventCallbacks.h
+B:\Proiecte\UniSign\UniSignApp\Sign recognition\Library\Bee\Android\Prj\IL2CPP\Gradle\unityLibrary\src\main\cpp\GameActivity\UnityToGAMotionEventCallbacks.h
