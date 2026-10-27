@@ -1,0 +1,14 @@
+name = "sign-recognition-ai-bridge"
+main = "src/index.js"
+compatibility_date = "2026-10-16"
+
+[vars]
+GITHUB_OWNER = "NeceaTitus"
+GITHUB_REPO = "Sign-Recognition-new"
+WORKFLOW_FILE = "ai-agent.yml"
+# Completează după ce afli ID-urile Slack:
+ALLOWED_SLACK_USER_IDS = "U_FIRST,U_SECOND"
+
+# Setează secretele cu wrangler secret put, niciodată în acest fișier:
+# SLACK_SIGNING_SECRET
+# GITHUB_TOKEN

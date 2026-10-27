@@ -1,0 +1,84 @@
+name: Slack AI Agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "Command received from Slack"
+        required: true
+        type: string
+      slack_response_url:
+        description: "Slack response URL"
+        required: false
+        type: string
+      slack_user_id:
+        description: "Slack user ID"
+        required: true
+        type: string
+      slack_channel_id:
+        description: "Slack channel ID"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  agent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.AGENT_GITHUB_TOKEN || github.token }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run AI agent
+        id: agent
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          AGENT_COMMAND: ${{ inputs.command }}
+          SLACK_RESPONSE_URL: ${{ inputs.slack_response_url }}
+        run: python scripts/ai_agent.py
+
+      - name: Create Pull Request
+        if: steps.agent.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.AGENT_GITHUB_TOKEN || github.token }}
+          COMMAND: ${{ inputs.command }}
+          SUMMARY: ${{ steps.agent.outputs.summary }}
+        run: |
+          BRANCH="ai/slack-${GITHUB_RUN_ID}"
+          git config user.name "sign-recognition-ai-agent"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "ai: ${COMMAND:0:72}"
+          git push --set-upstream origin "$BRANCH"
+          PR_URL=$(gh pr create --base main --head "$BRANCH" --title "AI: ${COMMAND:0:70}" --body "Generated from Slack by the authorized AI agent.\n\nSummary:\n${SUMMARY}\n\nRequester: ${{ inputs.slack_user_id }}")
+          echo "PR_URL=$PR_URL" >> "$GITHUB_ENV"
+
+      - name: Report to Slack
+        if: always() && inputs.slack_response_url != ''
+        env:
+          SLACK_RESPONSE_URL: ${{ inputs.slack_response_url }}
+          JOB_STATUS: ${{ job.status }}
+          PR_URL: ${{ env.PR_URL }}
+          SUMMARY: ${{ steps.agent.outputs.summary }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          status = os.environ.get("JOB_STATUS", "unknown")
+          pr = os.environ.get("PR_URL", "")
+          summary = os.environ.get("SUMMARY", "")
+          text = f"Agent status: {status}. " + (f"Pull Request: {pr}" if pr else summary or "Nu au fost produse modificări.")
+          req = urllib.request.Request(os.environ["SLACK_RESPONSE_URL"], data=json.dumps({"response_type":"in_channel","text":text}).encode(), headers={"Content-Type":"application/json"})
+          urllib.request.urlopen(req, timeout=10).read()
+          PY
