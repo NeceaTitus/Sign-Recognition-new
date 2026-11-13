@@ -34,7 +34,7 @@ Repository context:
 
 body = {"contents":[{"parts":[{"text":prompt}]}], "generationConfig":{"temperature":0.15,"responseMimeType":"application/json"}}
 req = urllib.request.Request(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + API_KEY,
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=" + API_KEY,
     data=json.dumps(body).encode(), headers={"Content-Type":"application/json"})
 with urllib.request.urlopen(req, timeout=120) as r:
     result = json.load(r)
