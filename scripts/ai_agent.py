@@ -6,21 +6,54 @@ API_KEY = os.environ["GEMINI_API_KEY"]
 
 allowed_ext = {".cs", ".asmdef", ".json", ".md", ".txt", ".shader", ".uxml", ".uss", ".asset", ".yaml", ".yml"}
 ignored = {"Library", "Temp", "Logs", "Builds", "UserSettings", ".git", "Packages"}
-files = []
+import re
+
+requested_names = {
+    item.lower()
+    for item in re.findall(r"[\w./\\-]+\.cs\b", COMMAND, re.IGNORECASE)
+}
+
+candidates = []
+
 for p in ROOT.rglob("*"):
     if not p.is_file() or any(part in ignored for part in p.parts):
         continue
+
     if p.suffix.lower() not in allowed_ext and p.name not in {"README.md", "manifest.json"}:
         continue
+
     try:
         text = p.read_text(errors="ignore")
     except Exception:
         continue
-    if len(text) <= 30000:
-        files.append(f"\n--- FILE: {p.relative_to(ROOT)} ---\n{text}")
+
+    relative = str(p.relative_to(ROOT)).replace("\\", "/").lower()
+    basename = p.name.lower()
+    is_requested = basename in requested_names or relative in requested_names
+
+    if len(text) <= 30000 or is_requested:
+        candidates.append((is_requested, relative, text))
+
+# Fișierele menționate în comandă intră primele în context.
+candidates.sort(key=lambda item: (not item[0], item[1]))
+
+files = []
+total_chars = 0
+max_context = 180000
+
+for is_requested, relative, text in candidates:
+    file_block = f"\n--- FILE: {relative} ---\n{text}"
+
+    if total_chars + len(file_block) > max_context:
+        if is_requested:
+            # Fișierele cerute explicit au prioritate chiar dacă sunt mari.
+            files.append(file_block)
+        continue
+
+    files.append(file_block)
+    total_chars += len(file_block)
+
 context = "".join(files)
-if len(context) > 180000:
-    context = context[:180000]
 
 prompt = f'''You are a careful senior Unity C# engineer modifying a public GitHub repository.
 User request: {COMMAND}
