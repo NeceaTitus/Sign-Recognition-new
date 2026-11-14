@@ -40,7 +40,26 @@ body = {"contents": [{"parts": [{"text": prompt}]}], "generationConfig": {"tempe
 req = urllib.request.Request(
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=" + API_KEY,
     data=json.dumps(body).encode(), headers={"Content-Type": "application/json"})
-with urllib.request.urlopen(req, timeout=120) as r:
+import time
+
+result = None
+last_error = None
+
+for attempt in range(3):
+    try:
+        with urllib.request.urlopen(req, timeout=300) as r:
+            result = json.load(r)
+        break
+    except Exception as error:
+        last_error = error
+        if attempt < 2:
+            time.sleep(5)
+
+if result is None:
+    raise RuntimeError(
+        f"Gemini nu a răspuns după 3 încercări: {last_error}"
+    )
+
     result = json.load(r)
 answer = json.loads(result["candidates"][0]["content"]["parts"][0]["text"])
 summary = str(answer.get("summary", "No summary provided"))
