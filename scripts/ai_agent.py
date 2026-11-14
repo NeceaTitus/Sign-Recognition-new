@@ -102,6 +102,48 @@ if patch.startswith("```"):
 
 summary = answer.get("summary", "No summary provided")
 if patch:
+    actual_paths = {}
+
+    for repo_file in ROOT.rglob("*"):
+        if repo_file.is_file():
+            relative = str(repo_file.relative_to(ROOT)).replace("\\", "/")
+            actual_paths[relative.lower()] = relative
+
+    normalized_lines = []
+
+    for line in patch.splitlines():
+        if line.startswith("--- ") or line.startswith("+++ "):
+            marker, path = line[:4], line[4:]
+
+            # Elimină prefixul temporar al patch-ului.
+            prefix = ""
+            clean_path = path
+
+            if clean_path.startswith("a/") or clean_path.startswith("b/"):
+                prefix = clean_path[:2]
+                clean_path = clean_path[2:]
+
+            normalized_path = actual_paths.get(clean_path.lower(), clean_path)
+            line = marker + prefix + normalized_path
+
+        normalized_lines.append(line)
+
+    patch = "\n".join(normalized_lines).strip()
+
+    pathlib.Path("/tmp/agent.patch").write_text(patch)
+    subprocess.run(
+        ["git", "apply", "--check", "/tmp/agent.patch"],
+        check=True
+    )
+    subprocess.run(
+        ["git", "apply", "--whitespace=error", "/tmp/agent.patch"],
+        check=True
+    )
+    subprocess.run(["git", "diff", "--check"], check=True)
+    changed = "true"
+else:
+    changed = "false"
+
     pathlib.Path("/tmp/agent.patch").write_text(patch)
     subprocess.run(["git", "apply", "--check", "/tmp/agent.patch"], check=True)
     subprocess.run(["git", "apply", "--whitespace=error", "/tmp/agent.patch"], check=True)
