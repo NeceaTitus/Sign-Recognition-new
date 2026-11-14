@@ -42,6 +42,7 @@ public class ChatWindow : MonoBehaviour
 
     private void Awake()
     {
+        // Comentariu de test
         // Construiește structura UI pentru ScrollView la inițializare.
         BuildScrollView();
     }
