@@ -144,13 +144,6 @@ if patch:
 else:
     changed = "false"
 
-    pathlib.Path("/tmp/agent.patch").write_text(patch)
-    subprocess.run(["git", "apply", "--check", "/tmp/agent.patch"], check=True)
-    subprocess.run(["git", "apply", "--whitespace=error", "/tmp/agent.patch"], check=True)
-    subprocess.run(["git", "diff", "--check"], check=True)
-    changed = "true"
-else:
-    changed = "false"
 with open(os.environ["GITHUB_OUTPUT"], "a") as out:
     out.write(f"changed={changed}\n")
     safe = summary.replace("%", "%25").replace("\n", "%0A").replace("\r", "%0D")
