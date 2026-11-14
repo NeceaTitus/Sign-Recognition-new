@@ -58,7 +58,21 @@ context = "".join(files)
 prompt = f'''You are a careful senior Unity C# engineer modifying a public GitHub repository.
 User request: {COMMAND}
 Repository: NeceaTitus/Sign-Recognition-new, Unity 6000.2.4f1.
-Return ONLY valid JSON with keys summary and patch. patch must be a standard unified diff that applies with `git apply`.
+Return ONLY valid JSON with keys summary and patch.
+
+The patch must be a valid standard unified diff accepted by:
+git apply --check
+
+Every modified file must have a complete diff header:
+--- a/path/to/file
++++ b/path/to/file
+
+Every hunk must have a valid hunk header like:
+@@ -10,3 +10,4 @@
+
+Do not return Markdown code fences.
+Do not return explanations outside the JSON.
+If you cannot create a valid patch, return an empty patch string.
 Rules: modify only files shown in the context; do not add binaries; do not change project secrets; do not edit .gitignore; keep changes minimal; add or update tests only when practical; if no safe change is possible, return an empty patch and explain in summary.
 
 Repository context:
@@ -73,7 +87,19 @@ with urllib.request.urlopen(req, timeout=120) as r:
     result = json.load(r)
 text = result["candidates"][0]["content"]["parts"][0]["text"]
 answer = json.loads(text)
-patch = answer.get("patch", "")
+patch = answer.get("patch", "").strip()
+
+if patch.startswith("```"):
+    patch_lines = patch.splitlines()
+
+    if patch_lines and patch_lines[0].startswith("```"):
+        patch_lines = patch_lines[1:]
+
+    if patch_lines and patch_lines[-1].strip() == "```":
+        patch_lines = patch_lines[:-1]
+
+    patch = "\n".join(patch_lines).strip()
+
 summary = answer.get("summary", "No summary provided")
 if patch:
     pathlib.Path("/tmp/agent.patch").write_text(patch)
